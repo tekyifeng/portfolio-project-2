@@ -105,26 +105,26 @@ for table in table_name:
     column_name = df.columns
 
 #Loop through each column name to rename to Column_Name format
-    for name in column_name:
-        counter_i = 0
-        column_name_list = []
-        for letter in name:
-            try:
-                if (name[counter_i + 1].isupper() or name[counter_i + 1].isdigit()) and name[counter_i].isupper() == False:
-                    letter = letter + "_"
-                    counter_i += 1
+        for name in column_name:
+            counter_i = 0
+            column_name_list = []
+            for letter in name:
+                try:
+                    if (name[counter_i + 1].isupper() or name[counter_i + 1].isdigit()) and name[counter_i].isupper() == False:
+                        letter = letter + "_"
+                        counter_i += 1
+                        column_name_list.append(letter)
+                    else:
+                        counter_i += 1
+                        column_name_list.append(letter)
+                except:
                     column_name_list.append(letter)
-                else:
-                    counter_i += 1
-                    column_name_list.append(letter)
-            except:
-                column_name_list.append(letter)
-        new_column_name = "".join(column_name_list)
-
-        df = df.withColumnRenamed(name , new_column_name)
+            new_column_name = "".join(column_name_list)
     
-    output_path = f"/mnt/gold/SalesLT/{table}/"
-    df.write.format('delta').mode('overwrite').save(output_path)
+            df = df.withColumnRenamed(name , new_column_name)
+        
+        output_path = f"/mnt/gold/SalesLT/{table}/"
+        df.write.format('delta').mode('overwrite').save(output_path)
 
 In overall, the data pipeline in Azure Data Factory looks like
 
@@ -134,27 +134,27 @@ In overall, the data pipeline in Azure Data Factory looks like
 
 In Synapse Analytics, I craeted a database called db_gold_container and then create tables using the following script
 
-USE db_gold_container
-GO
-
-CREATE OR ALTER PROC CreteSQLServerlessView_gold @ViewName NVARCHAR(100)
-AS
-BEGIN
-
-    DECLARE @statement VARCHAR(MAX)
-
-    SET @statement = N'CREATE OR ALTER VIEW ' + @ViewName + ' AS
-    SELECT *
-    FROM
-        OPENROWSET(
-            BULK ''https://portfolioproject2fengsa.dfs.core.windows.net/gold/SalesLT/' + @ViewName + '/'',
-            FORMAT = ''DELTA''
-        ) AS [result]
-    '
-
-    EXEC (@statement)
+    USE db_gold_container
+    GO
     
-END
+    CREATE OR ALTER PROC CreteSQLServerlessView_gold @ViewName NVARCHAR(100)
+    AS
+    BEGIN
+    
+        DECLARE @statement VARCHAR(MAX)
+    
+        SET @statement = N'CREATE OR ALTER VIEW ' + @ViewName + ' AS
+        SELECT *
+        FROM
+            OPENROWSET(
+                BULK ''https://portfolioproject2fengsa.dfs.core.windows.net/gold/SalesLT/' + @ViewName + '/'',
+                FORMAT = ''DELTA''
+            ) AS [result]
+        '
+    
+        EXEC (@statement)
+        
+    END
 
 After creating the tables, the following pipeline is created to create views in the SQL Database
 
