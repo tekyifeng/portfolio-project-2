@@ -73,58 +73,58 @@ The following shows the pyspark code that I used to transform the data
 
 # BRONZE TO SILVER
 #The following code changes the date type for all date columns in all Tables
-    from pyspark.sql.functions import from_utc_timestamp, date_format
-    from pyspark.sql.types import TimestampType
-    
-    for table in table_name:
-        input_path = f"/mnt/bronze/SalesLT/{table}/{table}.parquet"
-        df = spark.read.format('parquet').load(input_path)
-        column = df.columns
-    
-        for col in column:
-            if "Date" in col or "date" in col:
-                df = df.withColumn(col , date_format(from_utc_timestamp(df[col].cast(TimestampType()),"UTC"), "yyyy-MM-dd"))
-    
-        output_path = f"/mnt/silver/SalesLT/{table}/"
-        df.write.format('delta').mode("overwrite").save(output_path)
+        from pyspark.sql.functions import from_utc_timestamp, date_format
+        from pyspark.sql.types import TimestampType
+        
+        for table in table_name:
+            input_path = f"/mnt/bronze/SalesLT/{table}/{table}.parquet"
+            df = spark.read.format('parquet').load(input_path)
+            column = df.columns
+        
+            for col in column:
+                if "Date" in col or "date" in col:
+                    df = df.withColumn(col , date_format(from_utc_timestamp(df[col].cast(TimestampType()),"UTC"), "yyyy-MM-dd"))
+        
+            output_path = f"/mnt/silver/SalesLT/{table}/"
+            df.write.format('delta').mode("overwrite").save(output_path)
 
 # SILVER TO GOLD
 #The following code changes the column name from the format ColumnName to Column_Name
-    from pyspark.sql.functions import from_utc_timestamp, date_format
-    from pyspark.sql.types import TimestampType
-    
-    table_name = []
-    
-    for i in dbutils.fs.ls('mnt/silver/SalesLT'):
-        table_name.append(i.name.split('/')[0])
-    
-    #Loop through table
-    for table in table_name:
-        input_path = f"/mnt/silver/SalesLT/{table}/"
-        df = spark.read.format('delta').load(input_path)
-        column_name = df.columns
-    
-    #Loop through each column name to rename to Column_Name format
-            for name in column_name:
-                counter_i = 0
-                column_name_list = []
-                for letter in name:
-                    try:
-                        if (name[counter_i + 1].isupper() or name[counter_i + 1].isdigit()) and name[counter_i].isupper() == False:
-                            letter = letter + "_"
-                            counter_i += 1
-                            column_name_list.append(letter)
-                        else:
-                            counter_i += 1
-                            column_name_list.append(letter)
-                    except:
-                        column_name_list.append(letter)
-                new_column_name = "".join(column_name_list)
+        from pyspark.sql.functions import from_utc_timestamp, date_format
+        from pyspark.sql.types import TimestampType
         
-                df = df.withColumnRenamed(name , new_column_name)
+        table_name = []
+        
+        for i in dbutils.fs.ls('mnt/silver/SalesLT'):
+            table_name.append(i.name.split('/')[0])
+        
+        #Loop through table
+        for table in table_name:
+            input_path = f"/mnt/silver/SalesLT/{table}/"
+            df = spark.read.format('delta').load(input_path)
+            column_name = df.columns
+        
+        #Loop through each column name to rename to Column_Name format
+                for name in column_name:
+                    counter_i = 0
+                    column_name_list = []
+                    for letter in name:
+                        try:
+                            if (name[counter_i + 1].isupper() or name[counter_i + 1].isdigit()) and name[counter_i].isupper() == False:
+                                letter = letter + "_"
+                                counter_i += 1
+                                column_name_list.append(letter)
+                            else:
+                                counter_i += 1
+                                column_name_list.append(letter)
+                        except:
+                            column_name_list.append(letter)
+                    new_column_name = "".join(column_name_list)
             
-            output_path = f"/mnt/gold/SalesLT/{table}/"
-            df.write.format('delta').mode('overwrite').save(output_path)
+                    df = df.withColumnRenamed(name , new_column_name)
+                
+                output_path = f"/mnt/gold/SalesLT/{table}/"
+                df.write.format('delta').mode('overwrite').save(output_path)
 
 In overall, the data pipeline in Azure Data Factory looks like
 
