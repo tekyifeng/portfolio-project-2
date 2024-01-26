@@ -73,6 +73,7 @@ The following shows the pyspark code that I used to transform the data
 
 # BRONZE TO SILVER
 #The following code changes the date type for all date columns in all Tables
+
         from pyspark.sql.functions import from_utc_timestamp, date_format
         from pyspark.sql.types import TimestampType
         
@@ -90,6 +91,7 @@ The following shows the pyspark code that I used to transform the data
 
 # SILVER TO GOLD
 #The following code changes the column name from the format ColumnName to Column_Name
+
         from pyspark.sql.functions import from_utc_timestamp, date_format
         from pyspark.sql.types import TimestampType
         
