@@ -8,6 +8,7 @@ This is the project flow
 
 A database will be created in Mircosoft SQL Server, then it'll be connected to Azure Data factory, using azure data factory the data is ingested into Azure Data Lake Gen 2. After that, Databricks will be used to transform the data in Azure Lake Gen 2, then the data will be loaded into Azure Synapse Analytics and finally power bi is used to connect to the SQL Server in Synapse analytics for Data visualization and Analysis.
 
+%md
 Microsoft SQL Server
 
 A sample database called AdventureWorksLT2017 is being used in this project. Here's the link to the databases:  https://learn.microsoft.com/en-us/sql/samples/adventureworks-install-configure?view=sql-server-ver16&tabs=ssms
@@ -18,5 +19,6 @@ create user feng for login feng
 
 After Credentials have been created, I then create 2 secrets from Azure Key Vault to accomandate the credentials I have created.
 
+%md
 Azure Data Factory
 
