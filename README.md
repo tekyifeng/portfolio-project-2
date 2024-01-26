@@ -1,7 +1,7 @@
 This is an end to end azure data engineering project. Services that I have used includes Azure Data factory, Azure Databricks, Azure Key Vault, Azure datalakegen2, Azure Synapse Analytics. 
 I followed the steps from this youtube tutorial https://www.youtube.com/playlist?list=PLrG_BXEk3kXx6KE4nBmhf6QwSHMbznP2W to build this project
-%md
-Project Flow
+
+# Project Flow
 
 This is the project flow
 
@@ -10,7 +10,7 @@ This is the project flow
 
 A database will be created in Mircosoft SQL Server, then it'll be connected to Azure Data factory, using azure data factory the data is ingested into Azure Data Lake Gen 2. After that, Databricks will be used to transform the data in Azure Lake Gen 2, then the data will be loaded into Azure Synapse Analytics and finally power bi is used to connect to the SQL Server in Synapse analytics for Data visualization and Analysis.
 
-Microsoft SQL Server (MSSQL Server)
+# Microsoft SQL Server (MSSQL Server)
 
 A sample database called AdventureWorksLT2017 is being used in this project. Here's the link to the databases:  https://learn.microsoft.com/en-us/sql/samples/adventureworks-install-configure?view=sql-server-ver16&tabs=ssms
 After downloading the file from the link, I loaded up the database in Microsoft SQL Server management studio. Then, I created a login credential to the database with the following SQL Query:
@@ -20,13 +20,13 @@ create user feng for login feng
 
 After Credentials have been created, I then create 2 secrets from Azure Key Vault to accomandate the credentials I have created.
 
-Storage Account
+# Storage Account
 
 A storage account with azure lake gen 2 storage capability is created. Then, 3 containers bronze, silver and gold is created.
 
 ![image](https://github.com/tekyifeng/portfolio-project-2/assets/105114292/05c1da58-3d92-4aaf-8131-d2ee6a792959)
 
-Azure Data Factory
+# Azure Data Factory
 
 In Azure Data factory, I have created the following services for data ingestion
 1. Dataset - Dataset for Table from Database, Dataset for Data from Tables and Dataset to output all data
@@ -47,7 +47,7 @@ Then using for each funtion and the following query in copy data function:
 each table is copied into a dataset and output as parquet file in Azure Lake Gen 2 Storage for data transformation
 The data that we have ingested to Azure Lake Gen 2 Storage are all in the bronze folder.
 
-Azure Databricks
+# Azure Databricks
 
 Now we have all the data in Lake Gen 2 storage, Azure Databricks is used to transform the data. The data transformation method is following the best practices recommneded by Mircosoft, which is bronze, silver and gold layer
 
@@ -57,22 +57,22 @@ Gold Layer - the enriched data
 
 The following shows the pyspark code that I used to transform the data
 
-MOUNTING
+# MOUNTING
 
 configs = {
   "fs.azure.account.auth.type": "CustomAccessToken",
   "fs.azure.account.custom.token.provider.class": spark.conf.get("spark.databricks.passthrough.adls.gen2.tokenProviderClassName")
 }
 
-# Optionally, you can add <directory-name> to the source URI of your mount point.
+#Optionally, you can add <directory-name> to the source URI of your mount point.
 dbutils.fs.mount(
   source = "abfss://bronze@portfolioproject2fengsa.dfs.core.windows.net/",
   mount_point = "/mnt/bronze",
   extra_configs = configs)
 
 
-BRONZE TO SILVER
-# The following code changes the date type for all date columns in all Tables
+# BRONZE TO SILVER
+#The following code changes the date type for all date columns in all Tables
 from pyspark.sql.functions import from_utc_timestamp, date_format
 from pyspark.sql.types import TimestampType
 
@@ -88,8 +88,8 @@ for table in table_name:
     output_path = f"/mnt/silver/SalesLT/{table}/"
     df.write.format('delta').mode("overwrite").save(output_path)
 
-SILVER TO GOLD
-# The following code changes the column name from the format ColumnName to Column_Name
+# SILVER TO GOLD
+#The following code changes the column name from the format ColumnName to Column_Name
 from pyspark.sql.functions import from_utc_timestamp, date_format
 from pyspark.sql.types import TimestampType
 
@@ -130,7 +130,7 @@ In overall, the data pipeline in Azure Data Factory looks like
 
 ![image](https://github.com/tekyifeng/portfolio-project-2/assets/105114292/8e9818fd-32a7-45de-970a-a3e362b40f5b)
 
-Azure Synapse Analytics
+# Azure Synapse Analytics
 
 In Synapse Analytics, I craeted a database called db_gold_container and then create tables using the following script
 
@@ -164,7 +164,7 @@ First an integration dataset is created to read all the table names from the gol
 
 Then the data ready for reporting and visualization
 
-Data Visualization
+# Data Visualization
 
 To connect to Azure Synapse Analytics in Power BI, in the get data option, select Azure Synapse Analytics (SQL DW). Then, proceed to Azure Synapse Analytics and get the Serverless SQL endpoint link to use it to the connect to Power BI for visualization.
 
