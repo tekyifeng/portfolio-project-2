@@ -1,5 +1,12 @@
+# Introduction
 This is an end to end azure data engineering project. Services that I have used includes Azure Data factory, Azure Databricks, Azure Key Vault, Azure datalakegen2, Azure Synapse Analytics. 
 I followed the steps from this youtube tutorial https://www.youtube.com/playlist?list=PLrG_BXEk3kXx6KE4nBmhf6QwSHMbznP2W to build this project
+
+# Key Takeaways
+- Familiarized myself with interfaces in Azure Data Factory, Azure Data Bricks and Azure Synapse Analytics.
+- There are a lot of security procedure to follow, such as assigning role assignment to user and creating secrets in Azure Key Vaults.
+- Gain great understanding of Azure Data Lake Gen 2 Storage, Azure Data Factory and Azure Synapse Analytics.
+- Learned to use T-SQL and pyspark.
 
 # Project Flow
 
