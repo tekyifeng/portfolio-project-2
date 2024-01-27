@@ -10,7 +10,6 @@ I followed the steps from this youtube tutorial https://www.youtube.com/playlist
 
 # Project Flow
 
-This is the project flow
 
 ![image](https://github.com/tekyifeng/portfolio-project-2/assets/105114292/8a9b670b-3b60-455e-8d8d-5dd970df57ed)
 
@@ -176,6 +175,11 @@ Then the data ready for reporting and visualization
 # Data Visualization
 
 To connect to Azure Synapse Analytics in Power BI, in the get data option, select Azure Synapse Analytics (SQL DW). Then, proceed to Azure Synapse Analytics and get the Serverless SQL endpoint link to use it to the connect to Power BI for visualization.
+Please refer to the attachment for the dashboard creatd. When creating this dashboard, I used features like
+1. Drill Through
+2. Bookmark
+3. Create Date table for Date Dimension using DAX
+4. Use DAX function to create formulas
 
 
 
