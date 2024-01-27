@@ -57,9 +57,9 @@ The data that we have ingested to Azure Lake Gen 2 Storage are all in the bronze
 
 Now we have all the data in Lake Gen 2 storage, Azure Databricks is used to transform the data. The data transformation method is following the best practices recommneded by Mircosoft, which is bronze, silver and gold layer
 
-Bronze Layer - the unprocessed file (raw)
-Silver Layer - the validated data
-Gold Layer - the enriched data
+1, Bronze Layer - the unprocessed file (raw)
+2. Silver Layer - the validated data
+3. Gold Layer - the enriched data
 
 The following shows the pyspark code that I used to transform the data
 
